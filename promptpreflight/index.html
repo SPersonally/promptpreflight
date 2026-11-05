@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Check and anonymize sensitive data before pasting a prompt into an AI assistant. Runs locally. No account or API key needed.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="theme-color" content="#10162c">
+  <link rel="icon" type="image/svg+xml" href="./assets/logo.svg">
+  <link rel="stylesheet" href="./styles.css">
+  <title>PromptPreflight — privacy check before AI</title>
+</head>
+<body>
+  <div class="site-shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="PromptPreflight home">
+        <img src="./assets/logo.svg" width="38" height="38" alt="">
+        <span>PromptPreflight</span>
+      </a>
+      <nav aria-label="Navigation">
+        <span class="local-badge"><span class="local-dot"></span><span data-i18n="localBadge">Local processing</span></span>
+        <button id="language" type="button" class="nav-button" aria-label="Switch language">中文 / EN</button>
+        <a class="github-link" href="https://github.com" target="_blank" rel="noopener noreferrer" data-i18n="github">GitHub</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="eyebrow"><span class="sparkle">✦</span> <span data-i18n="eyebrow">OPEN SOURCE · PRIVACY FIRST</span></div>
+        <h1 id="hero-title" data-i18n="title">Think before you prompt.</h1>
+        <p class="subtitle" data-i18n="subtitle">Catch and mask credentials, personal information, and wallet addresses before sharing text with AI tools.</p>
+        <div class="hero-points">
+          <span data-i18n="featureOne">✓ No uploads</span>
+          <span data-i18n="featureTwo">✓ No API keys</span>
+          <span data-i18n="featureThree">✓ No tracking</span>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Prompt privacy workspace">
+        <div class="editor-card">
+          <div class="pane-heading">
+            <div>
+              <div class="section-kicker" data-i18n="stepOne">01 / INPUT</div>
+              <h2 data-i18n="inputTitle">Your original prompt</h2>
+            </div>
+            <div class="pane-actions">
+              <button id="sample" type="button" class="small-button" data-i18n="sample">Load example</button>
+              <button id="clear" type="button" class="small-button" data-i18n="clear">Clear all</button>
+            </div>
+          </div>
+          <label class="sr-only" for="source" data-i18n="inputTitle">Your original prompt</label>
+          <textarea id="source" maxlength="500000" spellcheck="false" placeholder="Paste the text you are about to send to an AI assistant..."></textarea>
+          <div class="pane-footer">
+            <span id="input-count">0 characters</span>
+            <label for="upload" class="upload-button" data-i18n="upload">Import .txt / .md</label>
+            <input id="upload" type="file" accept=".txt,.md,text/plain,text/markdown" hidden>
+          </div>
+        </div>
+
+        <div class="editor-card output-card">
+          <div class="pane-heading">
+            <div>
+              <div class="section-kicker" data-i18n="stepTwo">02 / OUTPUT</div>
+              <h2 data-i18n="outputTitle">Safer to share</h2>
+            </div>
+            <span class="result-badge" id="result-badge" data-i18n="waiting">Waiting for input</span>
+          </div>
+          <label class="sr-only" for="output" data-i18n="outputTitle">Safer to share</label>
+          <textarea id="output" readonly spellcheck="false" placeholder="The sanitized version will appear here."></textarea>
+          <div class="pane-footer output-footer">
+            <span data-i18n="neverPerfect">Always review before sharing.</span>
+            <div class="pane-actions">
+              <button id="download" type="button" class="small-button" disabled data-i18n="download">Download</button>
+              <button id="copy" type="button" class="primary-button" disabled data-i18n="copy">Copy safe text</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="details-grid">
+        <div class="panel findings-panel">
+          <div class="panel-title-row">
+            <div>
+              <div class="section-kicker" data-i18n="stepThree">03 / REVIEW</div>
+              <h2 data-i18n="reviewTitle">Privacy findings</h2>
+            </div>
+            <div id="count" class="big-count" aria-live="polite">0</div>
+          </div>
+          <p class="muted" data-i18n="reviewHint">Counts only. Detected values are never listed here.</p>
+          <div id="findings" class="findings-list" aria-live="polite">
+            <div class="empty-state" data-i18n="empty">Paste a prompt to start the preflight.</div>
+          </div>
+        </div>
+
+        <div class="panel settings-panel">
+          <div class="section-kicker" data-i18n="stepFour">04 / CONTROL</div>
+          <h2 data-i18n="settingsTitle">Detection rules</h2>
+          <p class="muted" data-i18n="settingsHint">Choose what to mask. Changes apply instantly.</p>
+          <div id="rules" class="rule-grid"></div>
+          <div class="custom-header">
+            <label for="custom" data-i18n="customTitle">Custom words or company names</label>
+            <span data-i18n="customHint">One phrase per line</span>
+          </div>
+          <textarea id="custom" class="custom-input" spellcheck="false" rows="3" placeholder="Project Codename&#10;Internal Company"></textarea>
+        </div>
+      </section>
+
+      <section class="trust-note">
+        <div class="trust-icon" aria-hidden="true">!</div>
+        <div>
+          <h2 data-i18n="limitTitle">A useful first check, not a guarantee.</h2>
+          <p data-i18n="limitBody">Pattern-based detection cannot find every secret, and some normal text may be flagged. Review the output manually. For high-risk data, use additional security controls.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span data-i18n="footerLeft">Open source · MIT license · Works without an AI account</span>
+      <span id="toast" role="status" aria-live="polite"></span>
+    </footer>
+  </div>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
