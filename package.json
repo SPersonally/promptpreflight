@@ -1,0 +1,16 @@
+{
+  "name": "promptpreflight",
+  "version": "1.0.0",
+  "description": "A local-first privacy preflight for AI prompts. No account, API key, or server required.",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check src/core.js && node --check app.js && node --check bin/cli.mjs",
+    "start": "node scripts/serve.mjs"
+  },
+  "license": "MIT"
+}
